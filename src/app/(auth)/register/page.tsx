@@ -4,9 +4,9 @@ import Button from '@/components/Button'
 import Input from '@/components/Input'
 import InputError from '@/components/InputError'
 import Label from '@/components/Label'
+import { RegisterError, useAuth } from '@/hooks/auth'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/auth'
-import { useState } from 'react'
+import { FormEventHandler, useState } from 'react'
 
 const Page = () => {
     const { register } = useAuth({
@@ -18,12 +18,12 @@ const Page = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState('')
-    const [errors, setErrors] = useState([])
+    const [errors, setErrors] = useState<RegisterError | undefined>(undefined)
 
-    const submitForm = event => {
+    const submitForm: FormEventHandler<HTMLFormElement> = event => {
         event.preventDefault()
 
-        register({
+        void register({
             name,
             email,
             password,
@@ -48,7 +48,7 @@ const Page = () => {
                     autoFocus
                 />
 
-                <InputError messages={errors.name} className="mt-2" />
+                <InputError messages={errors?.name} />
             </div>
 
             {/* Email Address */}
@@ -64,7 +64,7 @@ const Page = () => {
                     required
                 />
 
-                <InputError messages={errors.email} className="mt-2" />
+                <InputError messages={errors?.email} />
             </div>
 
             {/* Password */}
@@ -81,14 +81,12 @@ const Page = () => {
                     autoComplete="new-password"
                 />
 
-                <InputError messages={errors.password} className="mt-2" />
+                <InputError messages={errors?.password} />
             </div>
 
             {/* Confirm Password */}
             <div className="mt-4">
-                <Label htmlFor="passwordConfirmation">
-                    Confirm Password
-                </Label>
+                <Label htmlFor="passwordConfirmation">Confirm Password</Label>
 
                 <Input
                     id="passwordConfirmation"
@@ -102,7 +100,7 @@ const Page = () => {
                 />
 
                 <InputError
-                    messages={errors.password_confirmation}
+                    messages={errors?.password_confirmation}
                     className="mt-2"
                 />
             </div>

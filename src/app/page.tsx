@@ -147,7 +147,7 @@ const Home = () => {
 
                                 <div className="ml-12">
                                     <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                        Laravel's robust library of first-party
+                                        Laravel&apos;s robust library of first-party
                                         tools and libraries, such as{' '}
                                         <a
                                             href="https://forge.laravel.com"

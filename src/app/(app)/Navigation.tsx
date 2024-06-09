@@ -1,19 +1,24 @@
 import ApplicationLogo from '@/components/ApplicationLogo'
 import Dropdown from '@/components/Dropdown'
-import Link from 'next/link'
+import { DropdownButton } from '@/components/DropdownLink'
 import NavLink from '@/components/NavLink'
 import ResponsiveNavLink, {
     ResponsiveNavButton,
 } from '@/components/ResponsiveNavLink'
-import { DropdownButton } from '@/components/DropdownLink'
-import { useAuth } from '@/hooks/auth'
+import { User, useAuth } from '@/hooks/auth'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
-const Navigation = ({ user }) => {
+type Props = {
+    user: User
+}
+
+const Navigation = ({ user }: Props) => {
     const { logout } = useAuth()
 
     const [open, setOpen] = useState(false)
+    const pathname = usePathname()
 
     return (
         <nav className="bg-white border-b border-gray-100">
@@ -107,7 +112,7 @@ const Navigation = ({ user }) => {
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink
                             href="/dashboard"
-                            active={usePathname() === '/dashboard'}>
+                            active={pathname === '/dashboard'}>
                             Dashboard
                         </ResponsiveNavLink>
                     </div>

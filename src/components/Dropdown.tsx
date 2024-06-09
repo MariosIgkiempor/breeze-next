@@ -1,20 +1,24 @@
-import React from 'react'
 import { Menu, Transition } from '@headlessui/react'
+import React, { ReactNode } from 'react'
+
+type Props = {
+    align?: 'left' | 'right' | 'top'
+    width?: '16' | '24' | '32' | '48' | '64' | '96'
+    contentClasses?: string
+    trigger: ReactNode
+    children: ReactNode
+}
 
 const Dropdown = ({
     align = 'right',
-    width = 48,
+    width = '48',
     contentClasses = 'py-1 bg-white',
     trigger,
     children,
-}) => {
+}: Props) => {
     let alignmentClasses
 
-    switch (width) {
-        case '48':
-            width = 'w-48'
-            break
-    }
+    const widthClass = `w-${width}`
 
     switch (align) {
         case 'left':
@@ -44,7 +48,7 @@ const Dropdown = ({
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95">
                         <div
-                            className={`absolute z-50 mt-2 ${width} rounded-md shadow-lg ${alignmentClasses}`}>
+                            className={`absolute z-50 mt-2 ${widthClass} rounded-md shadow-lg ${alignmentClasses}`}>
                             <Menu.Items
                                 className={`rounded-md focus:outline-none ring-1 ring-black ring-opacity-5 ${contentClasses}`}
                                 static>

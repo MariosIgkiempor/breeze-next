@@ -1,4 +1,9 @@
-const InputError = ({ messages = [], className = '' }) => (
+type Props = {
+    messages?: string[]
+    className?: string
+}
+
+const InputError = ({ messages = [], className = '' }: Props) => (
     <>
         {messages.length > 0 && (
             <>

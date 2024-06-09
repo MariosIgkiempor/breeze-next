@@ -1,13 +1,13 @@
 'use client'
 
+import AuthSessionStatus from '@/app/(auth)/AuthSessionStatus'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import InputError from '@/components/InputError'
 import Label from '@/components/Label'
-import { useAuth } from '@/hooks/auth'
-import { useEffect, useState } from 'react'
+import { ResetPasswordError, useAuth } from '@/hooks/auth'
 import { useSearchParams } from 'next/navigation'
-import AuthSessionStatus from '@/app/(auth)/AuthSessionStatus'
+import { FormEventHandler, useEffect, useState } from 'react'
 
 const PasswordReset = () => {
     const searchParams = useSearchParams()
@@ -17,13 +17,15 @@ const PasswordReset = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState('')
-    const [errors, setErrors] = useState([])
-    const [status, setStatus] = useState(null)
+    const [errors, setErrors] = useState<ResetPasswordError | undefined>(
+        undefined,
+    )
+    const [status, setStatus] = useState<string | undefined>(undefined)
 
-    const submitForm = event => {
+    const submitForm: FormEventHandler<HTMLFormElement> = event => {
         event.preventDefault()
 
-        resetPassword({
+        void resetPassword({
             email,
             password,
             password_confirmation: passwordConfirmation,
@@ -33,7 +35,8 @@ const PasswordReset = () => {
     }
 
     useEffect(() => {
-        setEmail(searchParams.get('email'))
+        const email = searchParams.get('email')
+        if (email) setEmail(email)
     }, [searchParams.get('email')])
 
     return (
@@ -56,7 +59,7 @@ const PasswordReset = () => {
                         autoFocus
                     />
 
-                    <InputError messages={errors.email} className="mt-2" />
+                    <InputError messages={errors?.email} className="mt-2" />
                 </div>
 
                 {/* Password */}
@@ -71,10 +74,7 @@ const PasswordReset = () => {
                         required
                     />
 
-                    <InputError
-                        messages={errors.password}
-                        className="mt-2"
-                    />
+                    <InputError messages={errors?.password} className="mt-2" />
                 </div>
 
                 {/* Confirm Password */}
@@ -95,7 +95,7 @@ const PasswordReset = () => {
                     />
 
                     <InputError
-                        messages={errors.password_confirmation}
+                        messages={errors?.password_confirmation}
                         className="mt-2"
                     />
                 </div>

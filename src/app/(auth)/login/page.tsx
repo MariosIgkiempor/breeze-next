@@ -1,17 +1,28 @@
 'use client'
 
+import AuthSessionStatus from '@/app/(auth)/AuthSessionStatus'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import InputError from '@/components/InputError'
 import Label from '@/components/Label'
+import { useAuth, type LoginError } from '@/hooks/auth'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/auth'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import AuthSessionStatus from '@/app/(auth)/AuthSessionStatus'
+import { useSearchParams } from 'next/navigation'
+import { Suspense, useEffect, useState, type FormEventHandler } from 'react'
 
 const Login = () => {
-    const router = useRouter()
+    // NOTE: Had to wrap the implementation of the login page in a Suspense boundary
+    // https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    return (
+        <Suspense>
+            <LoginPage />
+        </Suspense>
+    )
+}
+
+const LoginPage = () => {
+    const searchParams = useSearchParams()
+    const reset = searchParams.get('reset')
 
     const { login } = useAuth({
         middleware: 'guest',
@@ -21,21 +32,23 @@ const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [shouldRemember, setShouldRemember] = useState(false)
-    const [errors, setErrors] = useState([])
-    const [status, setStatus] = useState(null)
+    const [errors, setErrors] = useState<LoginError | undefined>(undefined)
+    const [status, setStatus] = useState<string | undefined>(undefined)
+
+    const hasErrors = !!errors?.email?.length || !!errors?.password?.length
 
     useEffect(() => {
-        if (router.reset?.length > 0 && errors.length === 0) {
-            setStatus(atob(router.reset))
+        if (reset && reset?.length > 0 && !hasErrors) {
+            setStatus(atob(reset))
         } else {
-            setStatus(null)
+            setStatus(undefined)
         }
-    })
+    }, [])
 
-    const submitForm = async event => {
+    const submitForm: FormEventHandler<HTMLFormElement> = event => {
         event.preventDefault()
 
-        login({
+        void login({
             email,
             password,
             remember: shouldRemember,
@@ -62,7 +75,7 @@ const Login = () => {
                         autoFocus
                     />
 
-                    <InputError messages={errors.email} className="mt-2" />
+                    <InputError messages={errors?.email} className="mt-2" />
                 </div>
 
                 {/* Password */}
@@ -79,10 +92,7 @@ const Login = () => {
                         autoComplete="current-password"
                     />
 
-                    <InputError
-                        messages={errors.password}
-                        className="mt-2"
-                    />
+                    <InputError messages={errors?.password} className="mt-2" />
                 </div>
 
                 {/* Remember Me */}

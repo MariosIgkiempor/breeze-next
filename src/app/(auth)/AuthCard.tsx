@@ -1,4 +1,11 @@
-const AuthCard = ({ logo, children }) => (
+import { ReactNode } from 'react'
+
+type Props = {
+    logo: ReactNode
+    children: ReactNode
+}
+
+const AuthCard = ({ logo, children }: Props) => (
     <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
         <div>{logo}</div>
 

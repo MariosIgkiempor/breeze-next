@@ -1,12 +1,12 @@
 'use client'
 
+import AuthSessionStatus from '@/app/(auth)/AuthSessionStatus'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import InputError from '@/components/InputError'
 import Label from '@/components/Label'
-import { useAuth } from '@/hooks/auth'
-import { useState } from 'react'
-import AuthSessionStatus from '@/app/(auth)/AuthSessionStatus'
+import { ForgotPasswordError, useAuth } from '@/hooks/auth'
+import { FormEventHandler, useState } from 'react'
 
 const Page = () => {
     const { forgotPassword } = useAuth({
@@ -15,21 +15,23 @@ const Page = () => {
     })
 
     const [email, setEmail] = useState('')
-    const [errors, setErrors] = useState([])
-    const [status, setStatus] = useState(null)
+    const [errors, setErrors] = useState<ForgotPasswordError | undefined>(
+        undefined,
+    )
+    const [status, setStatus] = useState<string | undefined>(undefined)
 
-    const submitForm = event => {
+    const submitForm: FormEventHandler<HTMLFormElement> = event => {
         event.preventDefault()
 
-        forgotPassword({ email, setErrors, setStatus })
+        void forgotPassword({ email, setErrors, setStatus })
     }
 
     return (
         <>
             <div className="mb-4 text-sm text-gray-600">
                 Forgot your password? No problem. Just let us know your email
-                address and we will email you a password reset link that
-                will allow you to choose a new one.
+                address and we will email you a password reset link that will
+                allow you to choose a new one.
             </div>
 
             {/* Session Status */}
@@ -50,7 +52,7 @@ const Page = () => {
                         autoFocus
                     />
 
-                    <InputError messages={errors.email} className="mt-2" />
+                    <InputError messages={errors?.email} className="mt-2" />
                 </div>
 
                 <div className="flex items-center justify-end mt-4">

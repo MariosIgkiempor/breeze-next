@@ -1,4 +1,11 @@
-const AuthSessionStatus = ({ status, className, ...props }) => (
+import { HTMLAttributes } from 'react'
+
+type Props = HTMLAttributes<HTMLDivElement> & {
+    status?: string
+    className?: string
+}
+
+const AuthSessionStatus = ({ status, className, ...props }: Props) => (
     <>
         {status && (
             <div
